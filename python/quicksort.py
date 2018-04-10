@@ -1,5 +1,3 @@
-
-
 def parseInput(inputValue) :
 	arr = inputValue.split(",")
 	result = []
@@ -30,11 +28,11 @@ def partition(arr, pivotIndex) :
 
 	return (less, great, equal)
 
-
+# input data : int array
 def quickSort(arr) :
-	if len(arr) <= 0:
+	if len(arr) <= 1:
 		return arr
-		
+
 	(less, great, equal) = partition(arr, 0)
 
 	less = quickSort(less)
