@@ -97,9 +97,9 @@ class AhoCorasick:
                 if target.is_contain_children(node.element):
                     node.failure_node = target.children[node.element]
 
-            if node.end_of_pattern:
-                node.output_node = node
-                continue
+            # if node.end_of_pattern:
+            #     node.output_node = node
+            #     continue
 
             if node.failure_node.end_of_pattern:
                 node.output_node = node.failure_node
@@ -160,13 +160,17 @@ class AhoCorasick:
             if current.is_contain_children(element):
                 current = current.children[element]
 
+                if current.end_of_pattern:
+                    print("find correct pattern : %s" % current.get_pattern())
+                    results.add(current.get_pattern())
+
                 if current.has_output_node():
                     output = current.output_node
                     pattern = output.get_pattern()
                     print("find correct pattern : %s" % pattern)
                     results.add(pattern)
 
-                    while output.has_output_node() and not output.end_of_pattern:
+                    while output.has_output_node() :
                         output = output.output_node
                         pattern = output.get_pattern()
                         print("find correct pattern : %s" % pattern)
