@@ -1,6 +1,4 @@
-import math
-
-class KMeans:
+class kmeans:
     def __init__(self):
         pass
 
@@ -62,7 +60,7 @@ class KMeans:
         return min_index
 
     def calc_distance(self, a, b):
-        return math.sqrt(sum([(a[index] - b[index])**2 for index in range(0, len(a))]))
+        return sum([(a[index] - b[index])**2 for index in range(0, len(a))])
 
     def calc_center_points(self):
         for index in range(0, self.k):
@@ -84,18 +82,3 @@ class KMeans:
         num = len(cluster)
 
         return tuple([x/num for x in result])
-
-
-if __name__ == "__main__":
-    km = KMeans()
-
-    node_map = {
-        "A": (0,),
-        "B": (2,),
-        "C": (2.5,),
-        "D": (5,),
-        "E": (7,)
-    }
-
-    cluster_map = km.cluster(2, node_map)
-    print(cluster_map)
