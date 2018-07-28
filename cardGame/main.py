@@ -2,36 +2,35 @@ import sys
 
 def turn(cards, front, rear, who, mem):
     if mem[front][rear] != -1:
-        # print(mem[front][rear])
-        if who == 0:
-            return mem[front][rear]
-        else:
-            my, your = mem[front][rear]
-            return your, my
+        return mem[front][rear]
 
     if front == rear:
-        if who == 0:  # 짝수면 근우 턴
-            return cards[front], 0
-        else:  # 홀수면 명우 턴
-            return 0, cards[front]
+        if who == 0:
+            return cards[front]
+        else:
+            return 0
 
-    next = (who + 1) % 2
-    case_one_my, case_one_your = turn(cards, front + 1, rear, next, mem)
-    case_two_my, case_two_your = turn(cards, front, rear - 1, next, mem)
+    if who == 0:
+        next = 1
+    else:
+        next = 0
+
+    case_one_my = turn(cards, front + 1, rear, next, mem)
+    case_two_my = turn(cards, front, rear - 1, next, mem)
 
     # 근우 턴
     if who == 0:
         if case_one_my + cards[front] > case_two_my + cards[rear]:  # 앞 카드 선택이 높은 경우
-            mem[front][rear] = (case_one_my + cards[front], case_one_your)
+            mem[front][rear] = case_one_my + cards[front]
         else:  # 뒷 카드 선택이 높은 경우 or 같은 경우
-            mem[front][rear] = (case_two_my + cards[rear], case_two_your)
+            mem[front][rear] = case_two_my + cards[rear]
 
     # 명우 턴
     else:
-        if case_one_your + cards[front] > case_two_your + cards[rear]:
-            mem[front][rear] = (case_one_my, case_one_your + cards[front])
+        if case_one_my < case_two_my:
+            mem[front][rear] = case_one_my
         else:
-            mem[front][rear] = (case_two_my, case_two_your + cards[rear])
+            mem[front][rear] = case_two_my
 
     return mem[front][rear]
 
@@ -41,12 +40,13 @@ if __name__ == "__main__":
 
     for _ in range(test_case) :
         rear = int(input()) - 1
-        mem = [[-1 for _ in range(rear + 1)] for _ in range(rear + 1)]
-
         temp = input().split(" ")
+
+        mem = [[-1 for _ in range(1001)] for _ in range(1001)]
+
         cards = []
         for a in temp:
             cards.append(int(a))
 
-        score, _ = turn(cards, 0, rear, 0, mem)
+        score = turn(cards, 0, rear, 0, mem)
         print(score)
