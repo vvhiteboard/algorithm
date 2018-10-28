@@ -1,33 +1,34 @@
+import sys
 
-def makeParentAndDepth(mem, tree, parent, now, depth):
+def makeParentAndDepth(parent, now, depth):
     adjacent = tree[now][2]
 
     if len(adjacent) is 0:
         return
 
     for child in adjacent:
-        if child is parent:
+        if child == parent:
             continue
         tree[child][0] = now
         mem[child][0] = now
         tree[child][1] = depth
-        makeParentAndDepth(mem, tree, now, child, depth+1)
+        makeParentAndDepth(now, child, depth+1)
 
 
-def searchLCA(tree, mem, u, v):
+def searchLCA(u, v):
     depthA = tree[u][1]
     depthB = tree[v][1]
 
     # 깊이가 더 낮은쪽이 높이를 맞춘다.
     if depthA > depthB:
-        u = getSameHight(mem, u, depthA - depthB)
+        u = getSameHight(u, depthA - depthB)
     elif depthA < depthB:
-        v = getSameHight(mem, v, depthB - depthA)
+        v = getSameHight(v, depthB - depthA)
 
     if u == v or u == 1:
         return u
 
-    for k in range(19, -1, -1):
+    for k in range(17, -1, -1):
         if mem[u][k] == -1 or mem[u][k] == mem[v][k]:
             continue
 
@@ -37,7 +38,7 @@ def searchLCA(tree, mem, u, v):
     return mem[u][0]
 
 
-def getSameHight(mem, node, diff):
+def getSameHight(node, diff):
     k = 0
     while diff > 0:
         if diff & 1 == 1:
@@ -52,9 +53,12 @@ def getSameHight(mem, node, diff):
 # index : node 번호
 # (parent, depth, adjacent)
 if __name__ == "__main__":
+    sys.setrecursionlimit(10 ** 8)
     root = 1
     N = int(input())
+    global tree
     tree = [[None, -1, []] for _ in range(N + 1)]
+    global mem
     mem = [[-1 for _ in range(20)] for _ in range(N + 1)]
 
     for _ in range(N-1):
@@ -64,7 +68,7 @@ if __name__ == "__main__":
         tree[int(ins[1])][2].append(int(ins[0]))
 
     tree[root][1] = 0
-    makeParentAndDepth(mem, tree, -1, root, 1)
+    makeParentAndDepth(-1, root, 1)
 
     for k in range(20):
         for n in range(1, N+1):
@@ -78,7 +82,7 @@ if __name__ == "__main__":
         a = int(ins[0])
         b = int(ins[1])
 
-        lca = searchLCA(tree, mem, a, b)
+        lca = searchLCA(a, b)
         print(lca)
 
 
